@@ -8,9 +8,9 @@
 
 #ifndef RNHVNetworkHelper_h
 #define RNHVNetworkHelper_h
-#import "RCTBridgeModule.h"
-#import "RCTUtils.h"
-#import "RCTConvert.h"
+#import <React/RCTBridgeModule.h>
+#import <React/RCTUtils.h>
+#import <React/RCTConvert.h>
 
 @import HyperSnapSDK;
 

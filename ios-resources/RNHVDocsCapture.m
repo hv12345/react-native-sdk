@@ -55,6 +55,7 @@ RCT_EXPORT_METHOD(setShouldAddPadding:(DocumentType)shouldAdd){
 //   [getDocConfig() setShouldShowInstructionsPage:shouldShow];
 //   shouldShowInstructionPage = shouldShow;
 // }
+
 RCT_EXPORT_METHOD(setShouldShowReviewScreen:(BOOL)shouldShow){
   [getDocConfig() setShouldShowReviewPage:shouldShow];
 }
@@ -67,42 +68,35 @@ RCT_EXPORT_METHOD(start: (RCTResponseSenderBlock)completionHandler) {
 
   
   [HVDocsViewController start:root hvDocConfig:hvDocConfig completionHandler:^(HVError* error,NSDictionary<NSString *,id> * _Nonnull result, UIViewController* vcNew){
-    if(error != nil){
-      NSMutableDictionary *errorDict = [[NSMutableDictionary alloc] init];
-      NSNumber *errorCode = [NSNumber numberWithInteger:error.getErrorCode];
-      NSString *errorMessage = [NSString stringWithString:error.getErrorMessage];
-
-      [errorDict setValue: errorCode forKey: @"errorCode"];
-      [errorDict setValue: errorMessage forKey: @"errorMessage"];
-      if (result == nil) {
-        completionHandler(@[errorDict, [NSNull null]]);
-      }else{
-        completionHandler(@[errorDict, result]);
-      }
-    }else{
-      completionHandler(@[[NSNull null], result]);
-    }
-
     UIViewController* vcToDismiss = vcNew;
-    
     if ([vcNew isKindOfClass:[HVDocsViewController class]]) {
       if(shouldShowInstructionPage){
-        vcToDismiss = vcNew.presentingViewController.presentingViewController;
+        vcToDismiss = vcNew.presentingViewController;
       }
     }else{
       if(shouldShowInstructionPage){
-        vcToDismiss = vcNew.presentingViewController.presentingViewController.presentingViewController;
+        vcToDismiss = vcNew.presentingViewController.presentingViewController;
       }else{
           vcToDismiss = vcNew.presentingViewController.presentingViewController;
       }
     }
-
-    [vcToDismiss dismissViewControllerAnimated:false completion:nil];
-
+    [vcToDismiss dismissViewControllerAnimated:false completion:^(void){
+      if(error != nil){
+        NSMutableDictionary *errorDict = [[NSMutableDictionary alloc] init];
+        NSNumber *errorCode = [NSNumber numberWithInteger:error.getErrorCode];
+        NSString *errorMessage = [NSString stringWithString:error.getErrorMessage];
+        [errorDict setValue: errorCode forKey: @"errorCode"];
+        [errorDict setValue: errorMessage forKey: @"errorMessage"];
+        if (result == nil) {
+          completionHandler(@[errorDict, [NSNull null]]);
+        }else{
+          completionHandler(@[errorDict, result]);
+        }
+      }else{
+        completionHandler(@[[NSNull null], result]);
+      }
+    }];
   }];
-
-
-  
 }
 
 - (dispatch_queue_t)methodQueue

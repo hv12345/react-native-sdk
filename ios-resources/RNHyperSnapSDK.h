@@ -6,9 +6,9 @@
 //  Copyright © 2018 HyperVerge. All rights reserved.
 //  Compatible with SDK version 2.4.1
 
-#import "RCTBridgeModule.h"
-#import "RCTUtils.h"
-#import "RCTConvert.h"
+#import <React/RCTBridgeModule.h>
+#import <React/RCTUtils.h>
+#import <React/RCTConvert.h>
 
 
 @import HyperSnapSDK;

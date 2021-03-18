@@ -30,7 +30,3 @@ RCT_EXPORT_METHOD(initialize:(NSString *)appId appKey:(NSString *)appKey region:
 
 
 
-
-
-
-
