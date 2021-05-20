@@ -52,7 +52,7 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setShouldReturnFullImageUrl(Boolean shouldReturnFullImageUrl) {
+    public void setShouldReturnFullImageUri(Boolean shouldReturnFullImageUrl) {
         getFaceConfig().setShouldReturnFullImageUrl(shouldReturnFullImageUrl.booleanValue());
     }
 
@@ -113,7 +113,7 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setShouldAddPadding(Boolean shouldSetPadding) {
+    public void setShouldEnablePadding(Boolean shouldSetPadding) {
         getFaceConfig().setShouldEnablePadding(shouldSetPadding.booleanValue());
 
     }

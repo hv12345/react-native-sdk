@@ -52,6 +52,10 @@ RCT_EXPORT_METHOD(setShouldShowCameraSwitchButton:(BOOL)shouldShow){
   [getFaceConfig() setShouldShowCameraSwitchButton:shouldShow];
 }
 
+RCT_EXPORT_METHOD(setFaceCaptureTitle:(NSString *)title) {
+  [getFaceConfig() setFaceCaptureTitle:title];
+}
+
 // Assumes input like "#00FF00" (#RRGGBB).
 - (UIColor *)colorFromHexString:(NSString *)hexString {
   unsigned rgbValue = 0;

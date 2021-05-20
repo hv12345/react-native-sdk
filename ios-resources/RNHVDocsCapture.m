@@ -54,9 +54,9 @@ RCT_EXPORT_METHOD(setShouldAddPadding:(DocumentType)shouldAdd){
   [getDocConfig() setShouldAddPadding:shouldAdd];
 }
 
-RCT_EXPORT_METHOD(setShouldShowInstructionsPage:(BOOL)shouldShow){
-  [getDocConfig() setShouldShowInstructionsPage:shouldShow];
-  shouldShowInstructionPage = shouldShow;
+RCT_EXPORT_METHOD(setShouldShowInstructionPage:(BOOL)shouldShow){
+   [getDocConfig() setShouldShowInstructionsPage:shouldShow];
+   shouldShowInstructionPage = shouldShow;
 }
 
 RCT_EXPORT_METHOD(setShouldShowReviewScreen:(BOOL)shouldShow){
