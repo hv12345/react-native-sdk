@@ -254,6 +254,65 @@ public class RNHVDocsCapture extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setUIStrings(String uiStrings) {
+        try {
+            JSONObject uiStringsJsonObject = new JSONObject(uiStrings);
+            JSONObject customUIStrings = new JSONObject();
+
+            // Document capture screen title
+            if (uiStringsJsonObject.has("docCaptureTitle")) {
+                getDocConfig().setDocCaptureTitle(uiStringsJsonObject.getString("docCaptureTitle"));
+            }
+
+            // Document capture screen description
+            if (uiStringsJsonObject.has("docCaptureDescription")) {
+                getDocConfig().setDocCaptureDescription(uiStringsJsonObject.getString("docCaptureDescription"));
+            }
+
+            // Document capture screen sub text - FRONT/BACK text
+            if (uiStringsJsonObject.has("docCaptureSubText")) {
+                getDocConfig().setDocCaptureSubText(uiStringsJsonObject.getString("docCaptureSubText"));
+            }
+
+            // Review Screen retake button
+            if (uiStringsJsonObject.has("docReviewRetakeButton")) {
+                customUIStrings.put("docReviewRetakeButton", uiStringsJsonObject.getString(
+                        "docReviewRetakeButton"));
+            }
+
+            // Review Screen continue button
+            if (uiStringsJsonObject.has("docReviewContinueButton")) {
+                customUIStrings.put("docReviewContinueButton", uiStringsJsonObject.getString(
+                        "docReviewContinueButton"));
+            }
+
+            // Review Screen title
+            if (uiStringsJsonObject.has("docReviewTitle")) {
+                getDocConfig().setDocReviewTitle(uiStringsJsonObject.getString("docReviewTitle"));
+            }
+
+            // Review Screen description
+            if (uiStringsJsonObject.has("docReviewDescription")) {
+                getDocConfig().setDocReviewDescription(uiStringsJsonObject.getString("docReviewDescription"));
+            }
+
+            if (uiStringsJsonObject.has("docRetakeTitleText")) {
+                getDocConfig().setErrorReviewTitle(uiStringsJsonObject.getString("docRetakeTitleText"));
+            }
+
+            if (uiStringsJsonObject.has("docRetakeButtonText")) {
+                getDocConfig().setErrorReviewRetakeButton(uiStringsJsonObject.getString("docRetakeButtonText"));
+            }
+
+            // Using customUIStrings
+            getDocConfig().setCustomUIStrings(customUIStrings);
+
+        } catch (JSONException e) {
+            Log.e(getName(), Objects.requireNonNull(e.getMessage()));
+        }
+    }
+
+    @ReactMethod
     public void start(final Callback resultCallback) {
         hasBeenCalled = false;
 
@@ -261,13 +320,6 @@ public class RNHVDocsCapture extends ReactContextBaseJavaModule {
             @Override
             public void onResult(HVError error, HVResponse hvResponse) {
                 try {
-                    JSONObject result = hvResponse.getApiResult();
-                    JSONObject headers = hvResponse.getApiHeaders();
-
-                    String imageURI = hvResponse.getImageURI();
-                    String fullImageUri = hvResponse.getFullImageURI();
-                    String action = hvResponse.getAction();
-                    String retakeMessage = hvResponse.getRetakeMessage();
 
                     WritableMap errorObj = Arguments.createMap();
                     WritableMap resultsObj = Arguments.createMap();
@@ -280,7 +332,14 @@ public class RNHVDocsCapture extends ReactContextBaseJavaModule {
                             hasBeenCalled = true;
                             resultCallback.invoke(errorObj, null);
                         }
-                    } else {
+                    } else if (hvResponse != null) {
+                        JSONObject result = hvResponse.getApiResult();
+                        JSONObject headers = hvResponse.getApiHeaders();
+
+                        String imageURI = hvResponse.getImageURI();
+                        String fullImageUri = hvResponse.getFullImageURI();
+                        String action = hvResponse.getAction();
+                        String retakeMessage = hvResponse.getRetakeMessage();
                         if (result != null) {
                             resultsObj = null;
                             try {

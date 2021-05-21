@@ -63,6 +63,51 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setUIStrings(String uiStrings) {
+        try {
+            JSONObject uiStringsJsonObject = new JSONObject(uiStrings);
+            JSONObject customUIStrings = new JSONObject();
+
+            if (uiStringsJsonObject.has("faceCaptureTitle")) {
+                getFaceConfig().setFaceCaptureTitle(uiStringsJsonObject.getString("faceCaptureTitle"));
+            }
+
+            if (uiStringsJsonObject.has("faceCaptureMoveCloser")) {
+                customUIStrings.put("moveCloser", uiStringsJsonObject.getString("faceCaptureMoveCloser"));
+            }
+
+            if (uiStringsJsonObject.has("faceCaptureFaceFound")) {
+                customUIStrings.put("faceCaptureFaceFound", uiStringsJsonObject.getString("faceCaptureFaceFound"));
+            }
+
+            if (uiStringsJsonObject.has("faceCaptureFaceNotFound")) {
+                customUIStrings.put("faceCaptureFaceNotFound", uiStringsJsonObject.getString("faceCaptureFaceNotFound"));
+            }
+
+            if (uiStringsJsonObject.has("faceCaptureMoveAway")) {
+                customUIStrings.put("faceCaptureMoveAway", uiStringsJsonObject.getString("faceCaptureMoveAway"));
+            }
+
+            if (uiStringsJsonObject.has("faceCaptureMultipleFaces")) {
+                customUIStrings.put("faceCaptureMultipleFaces", uiStringsJsonObject.getString("faceCaptureMultipleFaces"));
+            }
+
+            if (uiStringsJsonObject.has("faceRetakeTitleText")) {
+                getFaceConfig().setErrorReviewTitle(uiStringsJsonObject.getString("faceRetakeTitleText"));
+            }
+
+            if (uiStringsJsonObject.has("faceRetakeButtonText")) {
+                getFaceConfig().setErrorReviewRetakeButton(uiStringsJsonObject.getString("faceRetakeButtonText"));
+            }
+
+            getFaceConfig().setCustomUIStrings(customUIStrings);
+
+        } catch (JSONException e) {
+            Log.e(getName(), Objects.requireNonNull(e.getMessage()));
+        }
+    }
+
+    @ReactMethod
     public void setCustomUIStrings(String customStrings) {
         try {
             JSONObject stringObj = new JSONObject();
@@ -151,13 +196,6 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
             public void onResult(HVError error, HVResponse hvResponse) {
 
                 try {
-                    JSONObject result = hvResponse.getApiResult();
-                    JSONObject headers = hvResponse.getApiHeaders();
-
-                    String imageURI = hvResponse.getImageURI();
-                    String fullImageUri = hvResponse.getFullImageURI();
-                    String action = hvResponse.getAction();
-                    String retakeMessage = hvResponse.getRetakeMessage();
 
                     WritableMap errorObj = Arguments.createMap();
                     WritableMap resultsObj = Arguments.createMap();
@@ -171,6 +209,14 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
                             resultCallback.invoke(errorObj, null);
                         }
                     } else {
+                        JSONObject result = hvResponse.getApiResult();
+                        JSONObject headers = hvResponse.getApiHeaders();
+
+                        String imageURI = hvResponse.getImageURI();
+                        String fullImageUri = hvResponse.getFullImageURI();
+                        String action = hvResponse.getAction();
+                        String retakeMessage = hvResponse.getRetakeMessage();
+
                         if (result != null) {
                             resultsObj = null;
                             try {
