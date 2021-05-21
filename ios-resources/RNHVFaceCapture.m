@@ -52,6 +52,10 @@ RCT_EXPORT_METHOD(setShouldShowCameraSwitchButton:(BOOL)shouldShow){
   [getFaceConfig() setShouldShowCameraSwitchButton:shouldShow];
 }
 
+RCT_EXPORT_METHOD(setFaceCaptureTitle:(NSString *)title) {
+  [getFaceConfig().textConfig setFaceCaptureTitle:title];
+}
+
 // Assumes input like "#00FF00" (#RRGGBB).
 - (UIColor *)colorFromHexString:(NSString *)hexString {
   unsigned rgbValue = 0;
@@ -59,6 +63,44 @@ RCT_EXPORT_METHOD(setShouldShowCameraSwitchButton:(BOOL)shouldShow){
   [scanner setScanLocation:1]; // bypass '#' character
   [scanner scanHexInt:&rgbValue];
   return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+RCT_EXPORT_METHOD(setUIStrings:(NSString *) uiStrings) {
+  NSData *data = [uiStrings dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  
+  if ([json objectForKey:@"faceCaptureTitle"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureTitle:[json objectForKey:@"faceCaptureTitle"]];
+  }
+  
+  if ([json objectForKey:@"faceCaptureMoveCloser"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureMoveAwayText:[json objectForKey:@"faceCaptureMoveCloser"]];
+  }
+  
+  if ([json objectForKey:@"faceCaptureFaceFound"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureFaceFoundText:[json objectForKey:@"faceCaptureFaceFound"]];
+  }
+  
+  if ([json objectForKey:@"faceCaptureFaceNotFound"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureFaceNotFoundText:[json objectForKey:@"faceCaptureFaceNotFound"]];
+  }
+  
+  if ([json objectForKey:@"faceCaptureMoveAway"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureMoveAwayText2:[json objectForKey:@"faceCaptureMoveAway"]];
+  }
+  
+  if ([json objectForKey:@"faceCaptureMultipleFaces"] != nil) {
+    [getFaceConfig().textConfig setFaceCaptureMultipleFacesDetectedText:[json objectForKey:@"faceCaptureMultipleFaces"]];
+  }
+  
+  if ([json objectForKey:@"faceRetakeTitleText"] != nil) {
+    [getFaceConfig().textConfig setFaceRetakeTitleText:[json objectForKey:@"faceRetakeTitleText"]];
+  }
+  
+  if ([json objectForKey:@"faceRetakeButtonText"] != nil) {
+    [getFaceConfig().textConfig setFaceRetakeTitleText:[json objectForKey:@"faceRetakeButtonText"]];
+  }
+
 }
 
 RCT_EXPORT_METHOD(setFaceCaptureCircleSuccessColor:(NSString *)color){

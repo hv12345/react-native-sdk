@@ -54,13 +54,55 @@ RCT_EXPORT_METHOD(setShouldAddPadding:(DocumentType)shouldAdd){
   [getDocConfig() setShouldAddPadding:shouldAdd];
 }
 
-RCT_EXPORT_METHOD(setShouldShowInstructionsPage:(BOOL)shouldShow){
-  [getDocConfig() setShouldShowInstructionsPage:shouldShow];
-  shouldShowInstructionPage = shouldShow;
+RCT_EXPORT_METHOD(setShouldShowInstructionPage:(BOOL)shouldShow){
+   [getDocConfig() setShouldShowInstructionsPage:shouldShow];
+   shouldShowInstructionPage = shouldShow;
 }
 
 RCT_EXPORT_METHOD(setShouldShowReviewScreen:(BOOL)shouldShow){
   [getDocConfig() setShouldShowReviewPage:shouldShow];
+}
+
+RCT_EXPORT_METHOD(setUIStrings:(NSString *) uiStrings) {
+  NSData *data = [uiStrings dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  
+  if ([json objectForKey:@"docCaptureTitle"] != nil) {
+    [getDocConfig().textConfig setDocCaptureTitle:[json objectForKey:@"docCaptureTitle"]];
+  }
+  
+  if ([json objectForKey:@"docCaptureDescription"] != nil) {
+    [getDocConfig().textConfig setDocCaptureDescription:[json objectForKey:@"docCaptureDescription"]];
+  }
+  
+  if ([json objectForKey:@"docCaptureSubText"] != nil) {
+    [getDocConfig().textConfig setDocCaptureSubText:[json objectForKey:@"docCaptureSubText"]];
+  }
+  
+  if ([json objectForKey:@"docReviewRetakeButton"] != nil) {
+    [getDocConfig().textConfig setDocReviewRetakeButtonText:[json objectForKey:@"docReviewRetakeButton"]];
+  }
+  
+  if ([json objectForKey:@"docReviewContinueButton"] != nil) {
+    [getDocConfig().textConfig setDocReviewContinueButtonText:[json objectForKey:@"docReviewContinueButton"]];
+  }
+  
+  if ([json objectForKey:@"docReviewTitle"] != nil) {
+    [getDocConfig().textConfig setDocReviewTitle:[json objectForKey:@"docReviewTitle"]];
+  }
+  
+  if ([json objectForKey:@"docReviewDescription"] != nil) {
+    [getDocConfig().textConfig setDocReviewDescription:[json objectForKey:@"docReviewDescription"]];
+  }
+
+  if ([json objectForKey:@"docRetakeTitleText"] != nil) {
+    [getDocConfig().textConfig setDocRetakePageTitleText:[json objectForKey:@"docRetakeTitleText"]];
+  }
+  
+  if ([json objectForKey:@"docRetakeButtonText"] != nil) {
+    [getDocConfig().textConfig setDocReviewRetakeButtonText:[json objectForKey:@"docRetakeButtonText"]];
+  }
+  
 }
 
 RCT_EXPORT_METHOD(start: (RCTResponseSenderBlock)completionHandler) {
@@ -126,11 +168,10 @@ RCT_EXPORT_METHOD(start: (RCTResponseSenderBlock)completionHandler) {
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result.apiResult options:NSJSONWritingPrettyPrinted error:&error];
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-        
         NSDictionary<NSString *,id> *apiResult = result.apiResult;
         
         
-        [resultDict setValue:jsonString forKey: @"apiResult"];
+        [resultDict setValue:apiResult forKey: @"apiResult"];
       }
       
       if (result.apiHeaders != nil) {
