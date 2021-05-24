@@ -199,7 +199,6 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
 
                     WritableMap errorObj = Arguments.createMap();
                     WritableMap resultsObj = Arguments.createMap();
-                    WritableMap headersObj = Arguments.createMap();
 
                     if (error != null) {
                         errorObj.putInt("errorCode", error.getErrorCode());
@@ -209,19 +208,18 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
                             resultCallback.invoke(errorObj, null);
                         }
                     } else {
-                        JSONObject result = hvResponse.getApiResult();
-                        JSONObject headers = hvResponse.getApiHeaders();
+                        JSONObject apiResult = hvResponse.getApiResult();
+                        JSONObject apiHeaders = hvResponse.getApiHeaders();
 
                         String imageURI = hvResponse.getImageURI();
                         String fullImageUri = hvResponse.getFullImageURI();
                         String action = hvResponse.getAction();
                         String retakeMessage = hvResponse.getRetakeMessage();
 
-                        if (result != null) {
+                        if (apiResult != null) {
                             resultsObj = null;
                             try {
-                                resultsObj = RNHVNetworkHelper.convertJsonToMap(result);
-                                resultsObj.putString("apiResult", result.toString());
+                                resultsObj.putMap("apiResult", RNHVNetworkHelper.convertJsonToMap(apiResult));
                                 resultsObj.putString("imageUri", imageURI);
                                 if (fullImageUri != null && !fullImageUri.isEmpty()) {
                                     resultsObj.putString("fullImageUri", fullImageUri);
@@ -236,11 +234,10 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
                                 Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                             }
                         }
-                        if (headers != null) {
-                            headersObj = null;
+                        if (apiHeaders != null) {
                             try {
-                                headersObj = RNHVNetworkHelper.convertJsonToMap(headers);
-                                resultsObj.putString("apiHeaders", headers.toString());
+                                resultsObj.putMap("apiHeaders",
+                                        RNHVNetworkHelper.convertJsonToMap(apiHeaders));
                             } catch (Exception e) {
                                 Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                             }

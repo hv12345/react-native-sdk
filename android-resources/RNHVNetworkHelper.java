@@ -146,36 +146,32 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void makeOCRCall(String endpoint, String documentUri, ReadableMap parameters, ReadableMap headers, final Callback resultCallback) {
+    public void makeOCRCall(String endpoint, String documentUri, ReadableMap parameters, ReadableMap requestHeaders, final Callback resultCallback) {
 
         APICompletionCallback completionCallback = new APICompletionCallback() {
             @Override
             public void onResult(HVError error, HVResponse hvResponse) {
 
-                JSONObject result = hvResponse.getApiResult();
-                JSONObject headers = hvResponse.getApiHeaders();
-
-                String imageURI = hvResponse.getImageURI();
-                String fullImageUri = hvResponse.getFullImageURI();
-                String action = hvResponse.getAction();
-                String retakeMessage = hvResponse.getRetakeMessage();
-
                 WritableMap errorObj = Arguments.createMap();
                 WritableMap resultsObj = Arguments.createMap();
-                WritableMap headersObj = Arguments.createMap();
 
                 if (error != null) {
 
                     errorObj.putInt("errorCode", error.getErrorCode());
                     errorObj.putString("errorMessage", error.getErrorMessage());
                     resultCallback.invoke(errorObj, null);
-                } else {
+                } else if (hvResponse != null) {
+                    JSONObject apiResult = hvResponse.getApiResult();
+                    JSONObject apiHeaders = hvResponse.getApiHeaders();
 
-                    if (result != null) {
-                        resultsObj = null;
+                    String imageURI = hvResponse.getImageURI();
+                    String fullImageUri = hvResponse.getFullImageURI();
+                    String action = hvResponse.getAction();
+                    String retakeMessage = hvResponse.getRetakeMessage();
+
+                    if (apiResult != null) {
                         try {
-                            resultsObj = RNHVNetworkHelper.convertJsonToMap(result);
-                            resultsObj.putString("apiResult", result.toString());
+                            resultsObj.putMap("apiResult", RNHVNetworkHelper.convertJsonToMap(apiResult));
                             resultsObj.putString("imageUri", imageURI);
                             if (fullImageUri != null && !fullImageUri.isEmpty()) {
                                 resultsObj.putString("fullImageUri", fullImageUri);
@@ -190,11 +186,10 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
                             Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                         }
                     }
-                    if (headers != null) {
-                        headersObj = null;
+                    if (apiHeaders != null) {
                         try {
-                            headersObj = RNHVNetworkHelper.convertJsonToMap(headers);
-                            resultsObj.putString("apiHeaders", headers.toString());
+                            resultsObj.putMap("apiHeaders",
+                                    RNHVNetworkHelper.convertJsonToMap(apiHeaders));
                         } catch (Exception e) {
                             Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                         }
@@ -212,8 +207,8 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
             }
 
             JSONObject headers2 = new JSONObject();
-            if (headers != null) {
-                headers2 = convertMapToJson(headers);
+            if (requestHeaders != null) {
+                headers2 = convertMapToJson(requestHeaders);
             }
             HVNetworkHelper.makeOCRCall(getCurrentActivity(), endpoint, documentUri, params, headers2, completionCallback);
         } catch (Exception e) {
@@ -222,34 +217,31 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void makeFaceMatchCall(String endpoint, String faceUri, String documentUri, ReadableMap parameters, ReadableMap headers, final Callback resultCallback) {
+    public void makeFaceMatchCall(String endpoint, String faceUri, String documentUri, ReadableMap parameters, ReadableMap requestHeaders, final Callback resultCallback) {
         APICompletionCallback completionCallback = new APICompletionCallback() {
             @Override
             public void onResult(HVError error, HVResponse hvResponse) {
 
-                JSONObject result = hvResponse.getApiResult();
-                JSONObject headers = hvResponse.getApiHeaders();
-
-                String imageURI = hvResponse.getImageURI();
-                String fullImageUri = hvResponse.getFullImageURI();
-                String action = hvResponse.getAction();
-                String retakeMessage = hvResponse.getRetakeMessage();
-
                 WritableMap errorObj = Arguments.createMap();
                 WritableMap resultsObj = Arguments.createMap();
-                WritableMap headersObj = Arguments.createMap();
 
                 if (error != null) {
                     errorObj.putInt("errorCode", error.getErrorCode());
                     errorObj.putString("errorMessage", error.getErrorMessage());
                     resultCallback.invoke(errorObj, null);
 
-                } else {
-                    if (result != null) {
-                        resultsObj = null;
+                } else if (hvResponse != null) {
+                    JSONObject apiResult = hvResponse.getApiResult();
+                    JSONObject apiHeaders = hvResponse.getApiHeaders();
+
+                    String imageURI = hvResponse.getImageURI();
+                    String fullImageUri = hvResponse.getFullImageURI();
+                    String action = hvResponse.getAction();
+                    String retakeMessage = hvResponse.getRetakeMessage();
+
+                    if (apiResult != null) {
                         try {
-                            resultsObj = RNHVNetworkHelper.convertJsonToMap(result);
-                            resultsObj.putString("apiResult", result.toString());
+                            resultsObj.putMap("apiResult", RNHVNetworkHelper.convertJsonToMap(apiResult));
                             resultsObj.putString("imageUri", imageURI);
                             if (fullImageUri != null && !fullImageUri.isEmpty()) {
                                 resultsObj.putString("fullImageUri", fullImageUri);
@@ -264,11 +256,10 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
                             Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                         }
                     }
-                    if (headers != null) {
-                        headersObj = null;
+                    if (apiHeaders != null) {
                         try {
-                            headersObj = RNHVNetworkHelper.convertJsonToMap(headers);
-                            resultsObj.putString("apiHeaders", headersObj.toString());
+                            resultsObj.putMap("apiHeaders",
+                                    RNHVNetworkHelper.convertJsonToMap(apiHeaders));
                         } catch (Exception e) {
                             Log.e(getName(), Objects.requireNonNull(e.getMessage()));
                         }
@@ -286,8 +277,8 @@ public class RNHVNetworkHelper extends ReactContextBaseJavaModule {
             }
 
             JSONObject headers2 = new JSONObject();
-            if (headers != null) {
-                headers2 = convertMapToJson(headers);
+            if (requestHeaders != null) {
+                headers2 = convertMapToJson(requestHeaders);
             }
 
             HVNetworkHelper.makeFaceMatchCall(getCurrentActivity(), endpoint, faceUri, documentUri, params, headers2, completionCallback);
