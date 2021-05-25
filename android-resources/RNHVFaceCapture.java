@@ -217,7 +217,6 @@ public class RNHVFaceCapture extends ReactContextBaseJavaModule {
                         String retakeMessage = hvResponse.getRetakeMessage();
 
                         if (apiResult != null) {
-                            resultsObj = null;
                             try {
                                 resultsObj.putMap("apiResult", RNHVNetworkHelper.convertJsonToMap(apiResult));
                                 resultsObj.putString("imageUri", imageURI);
