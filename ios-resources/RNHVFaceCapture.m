@@ -98,7 +98,7 @@ RCT_EXPORT_METHOD(setUIStrings:(NSString *) uiStrings) {
   }
   
   if ([json objectForKey:@"faceRetakeButtonText"] != nil) {
-    [getFaceConfig().textConfig setFaceRetakeTitleText:[json objectForKey:@"faceRetakeButtonText"]];
+    [getFaceConfig().textConfig setFaceRetakeButtonText:[json objectForKey:@"faceRetakeButtonText"]];
   }
 
 }
