@@ -32,12 +32,17 @@ RCT_EXPORT_METHOD(setShouldReturnFullImageUri:(BOOL)shouldReturn){
  [getFaceConfig() setShouldReturnFullImageUri:shouldReturn];
 }
 
-RCT_EXPORT_METHOD(setLivenessAPIParameters:(NSDictionary<NSString *,id> * _Nullable)parameters){
-  [getFaceConfig() setLivenessAPIParameters:parameters];
+RCT_EXPORT_METHOD(setLivenessAPIParameters:(NSString *) livenessParams){
+  NSData *data = [livenessParams dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  [getFaceConfig() setLivenessAPIParameters:json];
 }
 
-RCT_EXPORT_METHOD(setLivenessAPIHeaders:(NSDictionary<NSString *,NSString *> * _Nullable)headers){
-  [getFaceConfig() setLivenessAPIHeaders:headers];
+RCT_EXPORT_METHOD(setLivenessAPIHeaders:(NSString *) livenessHeaders){
+  NSData *data = [livenessHeaders dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  [getFaceConfig() setLivenessAPIHeaders:json];
+  
 }
 
 RCT_EXPORT_METHOD(setLivenessEndpoint:(NSString *)endpoint){
